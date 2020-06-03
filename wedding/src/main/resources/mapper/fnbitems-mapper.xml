@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.FnBItemsMapper">
+	<!-- DSU2019_Wedding_Backend_1.1 식음료 insert -->
+	<insert id="insertFnBItem" parameterType="fnBItemsVO">
+		<!-- DSU2019_Wedding_Backend_1.1.1 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT CONCAT(#{fnBClassifications_ID},(SELECT LPAD(SUBSTRING((SELECT IFNULL((SELECT MAX(id) FROM fnbitems a WHERE id LIKE (SELECT CONCAT(#{fnBClassifications_ID}, '%'))), #{fnBClassifications_ID})), 11, 13) + (1), 2, '0'))) AS id
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend_1.1.2 insert sql 작성 -->
+		insert INTO fnbitems (
+			ID, ItemName, Price, Memo, FnBClassifications_ID
+		)VALUES(
+			#{id}, #{itemName}, #{price}, #{memo}, #{fnBClassifications_ID}
+		);
+	</insert>
+	<!-- DSU2019_Wedding_Backend 식음료 리스트 조회-->
+	<select id = "selectFnBItems" parameterType="fnBItemsVO" resultType="com.wedding.dsu.model.fnbitems.FnBItemsFnbclassificationsJoinVO">
+		<!-- DSU2019_Wedding_Backend 식음료 리스트 select sql -->
+		    select * 
+			from fnbitems a
+			left outer join fnbclassifications b on a.FnBClassifications_ID = b.id
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test="id != null">						AND a.ID = #{id}</if>
+				<if test="itemName != null">				AND a.ItemName = #{itemName}</if>
+				<if test="memo != null">					AND a.Memo = #{memo}</if>
+				<if test="fnBClassifications_ID != null">	AND a.FnBClassifications_ID = #{fnBClassifications_ID}</if>
+			</trim>
+	</select>
+	
+		<!-- DSU2019_Wedding_Backend 식음료 단일 조회-->
+	<select id = "selectFnBItem" parameterType="fnBItemsVO" resultType="com.wedding.dsu.model.fnbitems.FnBItemsFnbclassificationsJoinVO">
+		<!-- DSU2019_Wedding_Backend 식음료 리스트 select sql -->
+		    select * 
+			from fnbitems a
+			left outer join fnbclassifications b on a.FnBClassifications_ID = b.id
+			where a.ID = #{id}
+	</select>
+
+	<update id="updateFnBItem" parameterType="fnBItemsVO">
+		<!-- DSU2019_Wedding_Backend 식음료 update sql 작성 -->
+	update FnBitems
+		<trim prefix="SET" suffixOverrides=",">
+				<if test="id != null">						iD = #{id},</if>
+				<if test="itemName != null">				itemName = #{itemName},</if>
+				<if test="price != 0">						price = #{price},</if>
+				<if test="memo != null">					memo = #{memo},</if>
+				<if test="fnBClassifications_ID != null">	fnBClassifications_ID = #{fnBClassifications_ID},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteFnBItem" parameterType="fnBItemsVO">
+		<!-- DSU2019_Wedding_Backend 식음료 단일 삭제 delte sql 작성 -->
+		delete from fnbitems 
+		where id = #{id}
+	</delete>
+</mapper>

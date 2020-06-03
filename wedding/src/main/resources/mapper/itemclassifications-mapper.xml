@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.ItemClassificationsMapper">
+<!-- DSU2019_Wedding_Backend 부대품목분류 insert -->
+	<insert id="insertItemClassification" parameterType="itemClassificationsVO">
+		<!-- DSU2019_Wedding_Backend id 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select IFNULL(concat("KRBS",(SELECT LPAD((select RIGHT ((SELECT max(id) FROM itemclassifications t), 6))+ 1, 6, "0"))),"KRBS000001")
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend 부대품목분류 insert sql-->
+		insert INTO itemclassifications (
+			ID, EventClassification, ItemClassificationName, itemclassifications.Order, UseStatus
+		)VALUES(
+			#{id}, #{eventClassification}, #{itemClassificationName}, #{order}, #{useStatus}
+		);
+	</insert>
+	
+	<!-- DSU2019_Wedding_Backend 부대품목분류 리스트 조회-->
+	<select id = "selectItemClassifications" parameterType="itemClassificationsVO" resultType="itemClassificationsVO">
+		<!-- DSU2019_Wedding_Backend 부대품목분류 리스트 select sql -->
+		    select * from itemclassifications
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test="id != null">						AND ID = #{id}</if>
+				<if test="eventClassification != null">	AND EventClassification = #{eventClassification}</if>
+				<if test="itemClassificationName != null">	AND ItemClassificationName = #{itemClassificationName}</if>
+				<!-- if test="order != null">					AND itemclassifications.Order = #{order}</if -->
+				<if test="useStatus != null">				AND UseStatus = #{useStatus}</if>
+			</trim>
+	</select>
+	
+		<!-- DSU2019_Wedding_Backend 부대품목분류 단일 조회-->
+	<select id = "selectItemClassification" parameterType="itemClassificationsVO" resultType="itemClassificationsVO">
+		<!-- DSU2019_Wedding_Backend 부대품목분류 리스트 select sql -->
+		    select * from itemclassifications where ID = #{id}
+	</select>
+
+	<update id="updateItemClassification" parameterType="itemClassificationsVO">
+		<!-- DSU2019_Wedding_Backend 부대품목분류 update sql 작성 -->
+	update itemclassifications
+		<trim prefix="SET" suffixOverrides=",">
+				<if test="eventClassification != null">	eventClassification = #{eventClassification},</if>
+				<if test="itemClassificationName != null">	ItemClassificationName = #{itemClassificationName},</if>
+				<if test="order != null">					itemclassifications.Order = #{order},</if>
+				<if test="useStatus != null">				UseStatus = #{useStatus},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteItemClassification" parameterType="itemClassificationsVO">
+		<!-- DSU2019_Wedding_Backend 부대품목분류 단일 삭제 delte sql 작성 -->
+		delete from itemclassifications 
+		where id = #{id}
+	</delete>
+
+</mapper>

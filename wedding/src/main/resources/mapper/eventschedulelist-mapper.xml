@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.EventScheduleListMapper">
+	<!-- DSU2019_Wedding_Backend_1.1 행사 내역 insert -->
+	<insert id="insertEventScheduleList" parameterType="eventScheduleListVO">
+		<!-- DSU2019_Wedding_Backend_1.1.1 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT CONCAT(#{contractCustomers_ID},(SELECT LPAD(SUBSTRING((SELECT IFNULL((SELECT MAX(id) FROM eventschedulelist a WHERE id LIKE (SELECT CONCAT(#{contractCustomers_ID}, '%'))), #{contractCustomers_ID})), 11, 13) + (1), 2, '0'))) AS id
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend_1.1.2 insert sql 작성 -->
+		insert INTO eventschedulelist (
+			ID, ContractCustomers_ID, Halls_ID, HallName, StartDate, EndDate
+		)VALUES(
+			#{id}, #{contractCustomers_ID}, #{halls_ID}, #{hallName}, #{startDate}, #{endDate}
+		);
+	</insert>
+	<!-- DSU2019_Wedding_Backend 행사 내역 리스트 조회-->
+	<select id = "selectEventScheduleList" parameterType="eventScheduleListVO" resultType="eventScheduleListVO">
+		<!-- DSU2019_Wedding_Backend 행사 내역 리스트 select sql -->
+		    select * from eventschedulelist
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">								
+				<if test = "id != null"> 					AND ID = #{id}</if> 
+				<if test = "contractCustomers_ID != null"> 	AND ContractCustomers_Id = #{contractCustomers_ID}</if> 
+				<if test = "halls_ID != null"> 				AND Halls_Id = #{halls_ID}</if> 
+				<if test = "hallName != null"> 				AND HallNamd = #{hallName}</if> 
+				<if test = "startDate != null"> 			AND StartDate &gt;= #{startDate}</if> 
+				<if test = "endDate != null"> 				AND EndDate &lt;= #{endDate}</if>
+			</trim>
+	</select>
+	
+	<update id="updateEventScheduleList" parameterType="eventScheduleListVO">
+		<!-- DSU2019_Wedding_Backend 행사 내역 update sql 작성 -->
+	update eventschedulelist
+		<trim prefix="SET" suffixOverrides=",">
+			<if test = "contractCustomers_ID != null"> 	ContractCustomers_Id = #{contractCustomers_ID},</if> 
+			<if test = "halls_ID != null"> 				Halls_Id = #{halls_ID},</if> 
+			<if test = "hallName != null"> 				HallName = #{hallName},</if> 
+			<if test = "startDate != null"> 			StartDate = #{startDate},</if> 
+			<if test = "endDate != null"> 				EndDate = #{endDate},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteEventScheduleList" parameterType="eventScheduleListVO">
+		<!-- DSU2019_Wedding_Backend 행사 내역 단일 삭제 delte sql 작성 -->
+		delete from eventschedulelist 
+		where id = #{id}
+	</delete>
+</mapper>

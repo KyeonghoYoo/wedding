@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.UnitProcurementItemListMapper">
+	<!-- DSU2019_Wedding_Backend_1.1 부대품목 내역 insert -->
+	<insert id="insertUnitProcurementItemList" parameterType="unitProcurementItemListVO">
+		<!-- DSU2019_Wedding_Backend_1.1.1 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT CONCAT(#{contractCustomers_ID},(SELECT LPAD(SUBSTRING((SELECT IFNULL((SELECT MAX(id) FROM unitprocurementitemlist a WHERE id LIKE (SELECT CONCAT(#{contractCustomers_ID}, '%'))), #{contractCustomers_ID})), 11, 13) + (1), 2, '0'))) AS id
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend_1.1.2 insert sql 작성 -->
+		insert INTO unitprocurementitemlist (
+			ID, ContractCustomers_ID, UnitProcurementItems_ID, ItemName, Price, Quantity, Discount, Amount
+		)VALUES(
+			#{id}, #{contractCustomers_ID}, #{unitProcurementItems_ID}, #{itemName}, #{price}, #{quantity}, #{discount}, #{amount}
+		);
+	</insert>
+	<!-- DSU2019_Wedding_Backend 부대품목 내역 리스트 조회-->
+	<select id = "selectUnitProcurementItemList" parameterType="unitProcurementItemListVO" resultType="unitProcurementItemListVO">
+		<!-- DSU2019_Wedding_Backend 부대품목 내역 리스트 select sql -->
+		    select * from unitprocurementitemlist
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test="id != null">						AND id = #{id}</if> 
+				<if test="contractCustomers_ID != null">	AND contractCustomers_ID = #{contractCustomers_ID}</if> 
+				<if test="unitProcurementItems_ID != null">	AND unitProcurementItems_ID = #{unitProcurementItems_ID}</if> 
+				<if test="itemName != null">				AND itemName = #{itemName}</if> 
+			</trim>
+	</select>
+
+	<update id="updateUnitProcurementItemList" parameterType="unitProcurementItemListVO">
+		<!-- DSU2019_Wedding_Backend 부대품목 내역 update sql 작성 -->
+	update unitprocurementitemlist
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="id != null">						id = #{id},</if> 
+			<if test="contractCustomers_ID != null">	contractCustomers_ID = #{contractCustomers_ID},</if> 
+			<if test="unitProcurementItems_ID != null">	unitProcurementItems_ID = #{unitProcurementItems_ID},</if> 
+			<if test="itemName != null">				itemName = #{itemName},</if> 
+			<if test="price != 0">						price = #{price},</if> 
+			<if test="quantity != 0">					quantity = #{quantity},</if> 
+			<if test="discount != 0">					discount = #{discount},</if> 
+			<if test="amount != 0">						amount = #{amount},</if>	
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteUnitProcurementItemList" parameterType="unitProcurementItemListVO">
+		<!-- DSU2019_Wedding_Backend 부대품목 내역 단일 삭제 delte sql 작성 -->
+		delete from unitprocurementitemlist 
+		where id = #{id}
+	</delete>
+</mapper>

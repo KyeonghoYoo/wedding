@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.PeopleInClientsMapper">
+	<!-- DSU2019_Wedding_Backend_1.1 식음료 insert -->
+	<insert id="insertPeopleInClient" parameterType="peopleInClientsVO">
+		<!-- DSU2019_Wedding_Backend_1.1.1 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT CONCAT(#{clients_ID},(SELECT LPAD(SUBSTRING((SELECT IFNULL((SELECT MAX(id) FROM peopleinclients a WHERE id LIKE (SELECT CONCAT(#{clients_ID}, '%'))), #{clients_ID})), 11, 13) + (1), 2, '0'))) AS id
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend_1.1.2 insert sql 작성 -->
+		insert INTO peopleinclients (
+			ID, Name, Position, ContactNumber, Email, Clients_ID
+		)VALUES(
+			#{id}, #{name}, #{position}, #{contactNumber}, #{email}, #{clients_ID}
+		);
+	</insert>
+	<!-- DSU2019_Wedding_Backend 식음료 리스트 조회-->
+	<select id = "selectPeopleInClients" parameterType="peopleInClientsVO" resultType="peopleInClientsVO">
+		<!-- DSU2019_Wedding_Backend 식음료 리스트 select sql -->
+		    select * from peopleinclients
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test = "id != null">			AND ID = #{id}</if> 
+				<if test = "name != null">			AND Name = #{name}</if> 
+				<if test = "position != null">		AND Position = #{position}</if> 
+				<if test = "contactNumber != null">	AND ContactNumber = #{contactNumber}</if> 
+				<if test = "email != null">			AND Email = #{email}</if> 
+				<if test = "clients_ID != null">	AND Clients_ID = #{clients_ID}</if>
+			</trim>
+	</select>
+	
+		<!-- DSU2019_Wedding_Backend 식음료 단일 조회-->
+	<select id = "selectPeopleInClient" parameterType="peopleInClientsVO" resultType="peopleInClientsVO">
+		<!-- DSU2019_Wedding_Backend 식음료 리스트 select sql -->
+		    select * from peopleinclients where ID = #{id}
+	</select>
+
+	<update id="updatePeopleInClient" parameterType="peopleInClientsVO">
+		<!-- DSU2019_Wedding_Backend 식음료 update sql 작성 -->
+	update peopleinclients
+		<trim prefix="SET" suffixOverrides=",">
+			<if test = "id != null">			ID = #{id},</if> 
+			<if test = "name != null">			Name = #{name},</if> 
+			<if test = "position != null">		Position = #{position},</if> 
+			<if test = "contactNumber != null">	ContactNumber = #{contactNumber},</if> 
+			<if test = "email != null">			Email = #{email},</if> 
+			<if test = "clients_ID != null">	Clients_ID = #{clients_ID},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deletePeopleInClient" parameterType="peopleInClientsVO">
+		<!-- DSU2019_Wedding_Backend 식음료 단일 삭제 delte sql 작성 -->
+		delete from peopleinclients 
+		where id = #{id}
+	</delete>
+</mapper>

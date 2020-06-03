@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.UnitProcurementItemsMapper">
+	<!-- DSU2019_Wedding_Backend_1.1 부대품목 insert -->
+	<insert id="insertUnitProcurementItem" parameterType="unitProcurementItemsVO">
+		<!-- DSU2019_Wedding_Backend_1.1.1 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT CONCAT(#{itemClassifications_ID},(SELECT LPAD(SUBSTRING((SELECT IFNULL((SELECT MAX(id) FROM unitProcurementItems a WHERE id LIKE (SELECT CONCAT(#{itemClassifications_ID}, '%'))), #{itemClassifications_ID})), 11, 13) + (1), 2, '0'))) AS id
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend_1.1.2 insert sql 작성 -->
+		insert INTO unitprocurementitems (
+			ID, ItemName, Price, Memo, ItemClassifications_ID
+		)VALUES(
+			#{id}, #{itemName}, #{price}, #{memo}, #{itemClassifications_ID}
+		);
+	</insert>
+	<!-- DSU2019_Wedding_Backend 부대품목 리스트 조회-->
+	<select id = "selectUnitProcurementItems" parameterType="unitProcurementItemsVO" resultType="com.wedding.dsu.model.unitprocurementitems.UnitProcurementItemsItemClassificationsJoinVO">
+		<!-- DSU2019_Wedding_Backend 부대품목 리스트 select sql -->
+		    select * 
+			from unitprocurementitems a
+			left outer join itemclassifications b on a.ItemClassifications_ID = b.id
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test="id != null">						AND a.ID = #{id}</if>
+				<if test="itemName != null">				AND a.ItemName = #{itemName}</if>
+				<if test="memo != null">					AND a.Memo = #{memo}</if>
+				<if test="itemClassifications_ID != null">	AND a.ItemClassifications_ID = #{itemClassifications_ID}</if>
+			</trim>
+	</select>
+	
+		<!-- DSU2019_Wedding_Backend 부대품목 단일 조회-->
+	<select id = "selectUnitProcurementItem" parameterType="unitProcurementItemsVO" resultType="com.wedding.dsu.model.unitprocurementitems.UnitProcurementItemsItemClassificationsJoinVO">
+		<!-- DSU2019_Wedding_Backend 부대품목 리스트 select sql -->
+		    select * 
+			from unitprocurementitems a
+			left outer join itemclassifications b on a.ItemClassifications_ID = b.id
+			where a.ID = #{id}
+	</select>
+
+	<update id="updateUnitProcurementItem" parameterType="unitProcurementItemsVO">
+		<!-- DSU2019_Wedding_Backend 부대품목 update sql 작성 -->
+	update unitprocurementitems
+		<trim prefix="SET" suffixOverrides=",">
+				<if test="id != null">						ID = #{id},</if>
+				<if test="itemName != null">				ItemName = #{itemName},</if>
+				<if test="price != 0">						Price = #{price},</if>
+				<if test="memo != null">					Memo = #{memo},</if>
+				<if test="itemClassifications_ID != null">	ItemClassifications_ID = #{itemClassifications_ID},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteUnitProcurementItem" parameterType="unitProcurementItemsVO">
+		<!-- DSU2019_Wedding_Backend 부대품목 단일 삭제 delte sql 작성 -->
+		delete from unitprocurementitems 
+		where id = #{id}
+	</delete>
+</mapper>

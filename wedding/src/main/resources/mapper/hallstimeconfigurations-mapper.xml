@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.HallsTimeConfigurationsMapper">
+	<!-- DSU2019_Wedding_Backend_1.1 홀시간관리 insert -->
+	<insert id="insertHallsTimeConfiguration" parameterType="hallsTimeConfigurationsVO">
+		<!-- DSU2019_Wedding_Backend_1.1.1 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT CONCAT(#{halls_ID},(SELECT LPAD(SUBSTRING((SELECT IFNULL((SELECT MAX(id) FROM hallstimeconfigurations a WHERE id LIKE (SELECT CONCAT(#{halls_ID}, '%'))), #{halls_ID})), 11, 13) + (1), 2, '0'))) AS id
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend_1.1.2 insert sql 작성 -->
+		insert INTO hallstimeconfigurations (
+			ID, Time,Month, Halls_ID
+		)VALUES(
+			#{id}, #{time},#{month}, #{halls_ID}
+		);
+	</insert>
+	<!-- DSU2019_Wedding_Backend 홀시간관리 리스트 조회-->
+	<select id = "selectHallsTimeConfigurations" parameterType="hallsTimeConfigurationsVO" resultType="hallsTimeConfigurationsVO">
+		<!-- DSU2019_Wedding_Backend 홀시간관리 리스트 select sql -->
+		    select * from hallstimeconfigurations
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test="id != null">		AND ID = #{id}</if>
+				<if test="time != null">	AND Time = #{time}</if>
+				<if test="month != null">	AND Month = #{month}</if>
+				<if test="halls_ID != null">AND Halls_ID = #{halls_ID}</if>
+			</trim>
+	</select>
+	
+		<!-- DSU2019_Wedding_Backend 홀시간관리 단일 조회-->
+	<select id = "selectHallsTimeConfiguration" parameterType="hallsTimeConfigurationsVO" resultType="hallsTimeConfigurationsVO">
+		<!-- DSU2019_Wedding_Backend 홀시간관리 리스트 select sql -->
+		    select * from hallstimeconfigurations where ID = #{id}
+	</select>
+
+	<update id="updateHallsTimeConfiguration" parameterType="hallsTimeConfigurationsVO">
+		<!-- DSU2019_Wedding_Backend 홀시간관리 update sql 작성 -->
+	update hallstimeconfigurations
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="id != null">		ID = #{id},</if>
+			<if test="time != null">	Time = #{time},</if>
+			<if test="month != null">	Month = #{month},</if>
+			<if test="halls_ID != null">Halls_ID = #{halls_ID},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteHallsTimeConfiguration" parameterType="hallsTimeConfigurationsVO">
+		<!-- DSU2019_Wedding_Backend 홀시간관리 단일 삭제 delte sql 작성 -->
+		delete from hallstimeconfigurations 
+		where id = #{id}
+	</delete>
+</mapper>

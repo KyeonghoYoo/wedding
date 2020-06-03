@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.ItemsOfClientsMapper">
+	<!-- DSU2019_Wedding_Backend_1.1 거래처 아이템 insert -->
+	<insert id="insertItemsOfClient" parameterType="itemsOfClientsVO">
+		<!-- DSU2019_Wedding_Backend_1.1.1 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT CONCAT(#{clients_ID},(SELECT LPAD(SUBSTRING((SELECT IFNULL((SELECT MAX(id) FROM itemsofclients a WHERE id LIKE (SELECT CONCAT(#{clients_ID}, '%'))), #{clients_ID})), 11, 13) + (1), 2, '0'))) AS id
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend_1.1.2 insert sql 작성 -->
+		insert INTO itemsofclients (
+			ID, ItemClassification, ItemName, SupplyPrice, Memo, Clients_ID
+		)VALUES(
+			#{id}, #{itemClassification}, #{itemName}, #{supplyPrice}, #{memo}, #{clients_ID}
+		);
+	</insert>
+	<!-- DSU2019_Wedding_Backend 거래처 아이템 리스트 조회-->
+	<select id = "selectItemsOfClients" parameterType="itemsOfClientsVO" resultType="itemsOfClientsVO">
+		<!-- DSU2019_Wedding_Backend 거래처 아이템 리스트 select sql -->
+		    select * from itemsofclients
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test = "id != null">				AND ID = #{id}</if>
+				<if test = "itemClassification != null">AND ItemClassification = #{itemClassification}</if>
+				<if test = "itemName != null">			AND ItemName = #{itemName}</if>
+				<if test = "memo != null">				AND Memo = #{memo}</if>
+				<if test = "clients_ID != null">		AND Clients_ID = #{clients_ID}</if>
+			</trim>
+	</select>
+	
+		<!-- DSU2019_Wedding_Backend 거래처 아이템 단일 조회-->
+	<select id = "selectItemsOfClient" parameterType="itemsOfClientsVO" resultType="itemsOfClientsVO">
+		<!-- DSU2019_Wedding_Backend 거래처 아이템 리스트 select sql -->
+		    select * from itemsofclients where ID = #{id}
+	</select>
+
+	<update id="updateItemsOfClient" parameterType="itemsOfClientsVO">
+		<!-- DSU2019_Wedding_Backend 거래처 아이템 update sql 작성 -->
+	update itemsofclients
+		<trim prefix="SET" suffixOverrides=",">
+			<if test = "id != null">				ID = #{id},</if>
+			<if test = "itemClassification != null">ItemClassification = #{itemClassification},</if>
+			<if test = "itemName != null">			ItemName = #{itemName},</if>
+			<if test = "supplyPrice != 0">			SupplyPrice = #{supplyPrice},</if>
+			<if test = "memo != null">				Memo = #{memo},</if>
+			<if test = "clients_ID != null">		Clients_ID = #{clients_ID},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteItemsOfClient" parameterType="itemsOfClientsVO">
+		<!-- DSU2019_Wedding_Backend 거래처 아이템 단일 삭제 delte sql 작성 -->
+		delete from itemsofclients 
+		where id = #{id}
+	</delete>
+</mapper>

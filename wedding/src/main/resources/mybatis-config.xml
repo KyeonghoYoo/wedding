@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+ PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="useGeneratedKeys" value="true" />
+		<setting name="defaultExecutorType" value="REUSE" />
+	</settings>
+	
+	<typeAliases>
+		<!-- <typeAlias alias="sample" type="com.jh.biz.sample.SampleVO"></typeAlias> -->
+		<typeAlias alias="HashMap" type="java.util.HashMap" />
+		<typeAlias alias="List" type="java.util.List" />
+		<!-- typeAlias alias="ContentProvider" type="web.domain.ContentProvider" /-->
+		<!--typeAlias alias="HelpEntry" type="web.domain.HelpEntry" /-->
+		
+		<!-- VO등록 -->
+		<typeAlias alias="contractCustomersVO" type="com.wedding.dsu.model.contractcustomers.ContractCustomersVO"/>
+		<typeAlias alias="eventScheduleListVO" type="com.wedding.dsu.model.eventschedulelist.EventScheduleListVO"/>
+		<typeAlias alias="paymentDetailsVO" type="com.wedding.dsu.model.paymentdetails.PaymentDetailsVO"/>
+		<typeAlias alias="usersVO" type="com.wedding.dsu.model.users.UsersVO"/>
+		<typeAlias alias="menuVO" type="com.wedding.dsu.model.menu.MenuVO"/>
+		<typeAlias alias="hallsVO" type="com.wedding.dsu.model.halls.HallsVO"/>
+		<typeAlias alias="itemClassificationsVO" type="com.wedding.dsu.model.itemclassifications.ItemClassificationsVO"/>
+		<typeAlias alias="unitProcurementItemsVO" type="com.wedding.dsu.model.unitprocurementitems.UnitProcurementItemsVO"/>
+		<typeAlias alias="fnbClassificationsVO" type="com.wedding.dsu.model.fnbclassifications.FnBClassificationsVO"/>
+		<typeAlias alias="fnBItemsVO" type="com.wedding.dsu.model.fnbitems.FnBItemsVO"/>
+		<typeAlias alias="hallsTimeConfigurationsVO" type="com.wedding.dsu.model.hallstimeconfigurations.HallsTimeConfigurationsVO"/>
+		<typeAlias alias="clientsVO" type="com.wedding.dsu.model.clients.ClientsVO"/>
+		<typeAlias alias="peopleInClientsVO" type="com.wedding.dsu.model.peopleinclients.PeopleInClientsVO"/>
+		<typeAlias alias="itemsOfClientsVO" type="com.wedding.dsu.model.itemsofclients.ItemsOfClientsVO"/>
+		<typeAlias alias="unitProcurementItemListVO" type="com.wedding.dsu.model.unitprocurementitemlist.UnitProcurementItemListVO"/>
+		<typeAlias alias="fnBItemListVO" type="com.wedding.dsu.model.fnbitemlist.FnBItemListVO"/>
+		<typeAlias alias="orderListVO" type="com.wedding.dsu.model.orderlist.OrderListVO"/>
+		<typeAlias alias="consultationDetailsVO" type="com.wedding.dsu.model.consultationdetails.ConsultationDetailsVO"/>
+		<typeAlias alias="consultationCustomersVO" type="com.wedding.dsu.model.consultationcustomers.ConsultationCustomersVO"/>
+	</typeAliases>
+</configuration>

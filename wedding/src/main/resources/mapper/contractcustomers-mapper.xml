@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.ContractCustomersMapper">
+
+	<!-- DSU2019_Wedding_Backend 계약고객 insert -->
+	<insert id="insertContractCustomer" parameterType="contractCustomersVO">
+		<!-- DSU2019_Wedding_Backend 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select IFNULL(concat("KRBS",(SELECT LPAD((select RIGHT ((SELECT max(id) FROM contractcustomers t), 6))+ 1, 6, "0"))),"KRBS000001")
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend insert sql-->
+		insert INTO contractcustomers (
+			ID, EventClassification, RegistrationDate, ContractDate,
+			ContractClassification, ContactPath, Users_ID, UserName,
+			Address1, Address2, Address3,  Menu_ID, MenuName,
+			AdultCharge, ChildCharge, PaymentAssuranceCount, ContractMemo,
+			GroomName, BrideName, MotherNameOfGroom, FatherNameOfGroom,
+			MotherNameOfBride, FatherNameOfBride, ParentGroomRelations,
+			ParentBrideRelations, MobileOfGroom, MobileOfBride, EmailOfGroom,
+			EmailOfBride, MealTicketCountOfGroom, MealTicketCountOfBride,
+			EstimatedAttendanceNumbers, EventName, EventContractorName,
+			ContactNumber, Mobile, Email, EventType,
+			GroomAdultMealCount,
+			GroomChildMealCount, GroomFnBPayment, GroomUnitProcurementItemPayment,
+			GroomDeposit, GroomDiscount, GroomCashDeposit, GroomCardDeposit,
+			GroomDealWithinTheDay, BrideAdultMealCount, BrideChildMealCount,
+			BrideFnBPayment, BrideUnitProcurementItemPayment, BrideDeposit,
+			BrideDiscount, BrideCashDeposit, BrideCardDeposit,
+			BrideDealWithinTheDay,
+			EventAdultMealCount, EventChildMealCount, EventUnitProcurementItemPayment,
+			EventDeposit, EventDiscount, EventCashDeposit, EventCardDeposit,
+			EventDealWithinTheDay
+		)VALUES(
+ 			#{id}, #{eventClassification}, now(), #{contractDate}, 
+			#{contractClassification}, #{contactPath}, #{users_ID}, #{userName}, 
+			#{address1}, #{address2}, #{address3}, #{menu_ID}, #{menuName}, 
+			#{adultCharge}, #{childCharge}, #{paymentAssuranceCount}, #{contractMemo}, 
+			#{groomName}, #{brideName}, #{motherNameOfGroom}, #{fatherNameOfGroom}, 
+			#{motherNameOfBride}, #{fatherNameOfBride}, #{parentGroomRelations}, 
+			#{parentBrideRelations}, #{mobileOfGroom}, #{mobileOfBride}, #{emailOfGroom}, 
+			#{emailOfBride}, #{mealTicketCountOfGroom}, #{mealTicketCountOfBride}, 
+			#{estimatedAttendanceNumbers}, #{eventName}, #{eventContractorName}, 
+			#{contactNumber}, #{mobile}, #{email}, #{eventType}, 
+			#{groomAdultMealCount}, #{groomChildMealCount}, #{groomFnBPayment}, 
+			#{groomUnitProcurementItemPayment}, #{groomDeposit}, #{groomDiscount},
+			#{groomCashDeposit}, #{groomCardDeposit}, #{groomDealWithinTheDay}, 
+			#{brideAdultMealCount}, #{brideChildMealCount}, #{brideFnBPayment}, 
+			#{brideUnitProcurementItemPayment}, #{brideDeposit}, #{brideDiscount}, 
+			#{brideCashDeposit}, #{brideCardDeposit}, #{brideDealWithinTheDay}, 
+			#{eventAdultMealCount}, #{eventChildMealCount}, #{eventUnitProcurementItemPayment}, 
+			#{eventDeposit}, #{eventDiscount}, #{eventCashDeposit}, #{eventCardDeposit}, #{eventDealWithinTheDay}
+		);
+	</insert>
+	
+	<!-- DSU2019_Wedding_Backend 계약고객 리스트 조회-->
+	<select id = "selectContractCustomers" parameterType="com.wedding.dsu.model.contractcustomers.ContractCustomersSearchVO" resultType="com.wedding.dsu.model.contractcustomers.ContractCustomersEventScheduleListJoinVO">
+		<!-- DSU2019_Wedding_Backend 계약고객 리스트 select sql -->
+		    select 
+				a.ID,
+				a.EventClassification,
+				a.RegistrationDate,
+				a.ContractDate,
+				a.ContractClassification,
+				a.ContactPath,
+				a.Users_ID,
+				a.UserName,
+				a.Address1,
+				a.Address2,
+				a.Address3,
+				a.Menu_ID,
+				a.MenuName,
+				a.AdultCharge,
+				a.ChildCharge,
+				a.PaymentAssuranceCount,
+				a.ContractMemo,
+				a.GroomName,
+				a.BrideName,
+				a.MotherNameOfGroom,
+				a.FatherNameOfGroom,
+				a.MotherNameOfBride,
+				a.FatherNameOfBride,
+				a.ParentGroomRelations,
+				a.ParentBrideRelations,
+				a.MobileOfGroom,
+				a.MobileOfBride,
+				a.EmailOfGroom,
+				a.EmailOfBride,
+				a.MealTicketCountOfGroom,
+				a.MealTicketCountOfBride,
+				a.EstimatedAttendanceNumbers,
+				a.EventName,
+				a.EventContractorName,
+				a.ContactNumber,
+				a.Mobile,
+				a.Email,
+				a.EventType,
+				a.GroomAdultMealCount,
+				a.GroomChildMealCount,
+				a.GroomFnBPayment,
+				a.GroomUnitProcurementItemPayment,
+				a.GroomDeposit,
+				a.GroomDiscount,
+				a.GroomCashDeposit,
+				a.GroomCardDeposit,
+				a.GroomDealWithinTheDay,
+				a.BrideAdultMealCount,
+				a.BrideChildMealCount,
+				a.BrideFnBPayment,
+				a.BrideUnitProcurementItemPayment,
+				a.BrideDeposit,
+				a.BrideDiscount,
+				a.BrideCashDeposit,
+				a.BrideCardDeposit,
+				a.BrideDealWithinTheDay,
+				a.EventAdultMealCount,
+				a.EventChildMealCount,
+				a.EventUnitProcurementItemPayment,
+				a.EventDeposit,
+				a.EventDiscount,
+				a.EventCashDeposit,
+				a.EventCardDeposit,
+				a.EventDealWithinTheDay,
+				b.Halls_ID,
+				b.HallName,
+				MAX(b.StartDate) as Hall_StartDate,
+				MAX(b.EndDate) as Hall_EndDate
+			from contractcustomers a 
+       			left outer join eventschedulelist b on a.id = b.ContractCustomers_ID
+			<trim prefix="WHERE" prefixOverrides="AND |OR">
+ 				<if test="eventClassification != null">		AND a.eventClassification	= #{eventClassification}</if>
+				<if test="contractClassification != null">	AND a.contractClassification= #{contractClassification}</if>
+				<if test="contactPath != null">				AND a.ContactPath			= #{contactPath}</if>
+				<if test="eventType != null">				AND a.eventType				= #{eventType}</if>	
+				<if test="eventName != null">				AND a.eventName				LIKE CONCAT('%', #{eventName}, '%')</if>
+				<if test="totalNameSearch != null">			AND a.eventName				LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR  a.groomName				LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR  a.brideName				LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR  a.eventContractorName	LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR	a.mobileOfBride			LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR  a.mobileOfGroom			LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR  a.contactNumber			LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR  a.mobile				LIKE CONCAT('%', #{totalNameSearch}, '%')
+															</if>
+				<if test="customerName != null">			AND a.eventName				LIKE CONCAT('%', #{customerName}, '%')
+															OR  a.groomName				LIKE CONCAT('%', #{customerName}, '%')
+															OR  a.brideName				LIKE CONCAT('%', #{customerName}, '%')
+															OR  a.eventContractorName	LIKE CONCAT('%', #{customerName}, '%')
+															</if>
+				<if test="contactNumber != null">			AND a.mobileOfBride			LIKE CONCAT('%', #{contactNumber}, '%')
+															OR  a.mobileOfGroom			LIKE CONCAT('%', #{contactNumber}, '%')
+															OR  a.contactNumber			LIKE CONCAT('%', #{contactNumber}, '%')
+															OR  a.mobile				LIKE CONCAT('%', #{contactNumber}, '%')
+															</if>
+				<if test="dateSeachClassification != null">
+					<if test='dateSeachClassification == "등록일"'><include refid="dateSearchSql"><property name="alias" value="a.RegistrationDate"/><property name="alias2" value="a.RegistrationDate"/></include></if>
+					<if test='dateSeachClassification == "계약일"'><include refid="dateSearchSql"><property name="alias" value="a.ContractDate"/><property name="alias2" value="a.ContractDate"/></include></if>
+					<if test='dateSeachClassification == "행사일"'><include refid="dateSearchSql"><property name="alias" value="b.StartDate"/><property name="alias2" value="b.EndDate"/></include></if>
+				</if>
+			</trim>
+			group by a.ID
+	</select>
+	<sql id="dateSearchSql"><if test="startDate != null">      and ${alias} &gt;= #{startDate}</if>
+	        				<if test="endDate != null">        and ${alias2} &lt;= #{endDate}</if> </sql>
+
+		<!-- DSU2019_Wedding_Backend 계약고객 단일 조회-->
+	<select id = "selectContractCustomer" parameterType="contractCustomersVO" resultType="contractCustomersVO">
+		<!-- DSU2019_Wedding_Backend 계약고객 리스트 select sql -->
+		    select * from contractcustomers where ID = #{id}
+	</select>
+
+	<update id="updateContractCustomer" parameterType="contractCustomersVO">
+		<!-- DSU2019_Wedding_Backend 계약고객 update sql 작성 -->
+	update contractcustomers
+		<trim prefix="SET" suffixOverrides=",">
+			<if test = "eventClassification != null">				eventClassification = #{eventClassification},</if>
+			<if test = "contractDate != null">						contractDate = #{contractDate},</if> 			
+			<if test = "contractClassification != null">			contractClassification = #{contractClassification},</if> 
+			<if test = "contactPath != null">						contactPath = #{contactPath},</if> 
+			<if test = "users_ID != null">							users_ID = #{users_ID},</if> 
+			<if test = "userName != null">							userName = #{userName},</if> 			
+			<if test = "address1 != null">							address1 = #{address1},</if> 
+			<if test = "address2 != null">							address2 = #{address2},</if> 
+			<if test = "address3 != null">							address3 = #{address3},</if> 
+			<if test = "menu_ID != null">							menu_ID = #{menu_ID},</if> 
+			<if test = "menuName != null">							menuName = #{menuName},</if> 			
+			<if test = "adultCharge != null">						adultCharge = #{adultCharge},</if> 
+			<if test = "childCharge != null">						childCharge = #{childCharge},</if> 
+			<if test = "paymentAssuranceCount != null">				paymentAssuranceCount = #{paymentAssuranceCount},</if> 
+			<if test = "contractMemo != null">						contractMemo = #{contractMemo},</if> 			
+			<if test = "groomName != null">							groomName = #{groomName},</if> 
+			<if test = "brideName != null">							brideName = #{brideName},</if> 
+			<if test = "motherNameOfGroom != null">					motherNameOfGroom = #{motherNameOfGroom},</if> 
+			<if test = "fatherNameOfGroom != null">					fatherNameOfGroom = #{fatherNameOfGroom},</if> 			
+			<if test = "motherNameOfBride != null">					motherNameOfBride = #{motherNameOfBride},</if> 
+			<if test = "fatherNameOfBride != null">					fatherNameOfBride = #{fatherNameOfBride},</if> 
+			<if test = "parentGroomRelations != null">				parentGroomRelations = #{parentGroomRelations},</if> 			
+			<if test = "parentBrideRelations != null">				parentBrideRelations = #{parentBrideRelations},</if> 
+			<if test = "mobileOfGroom != null">						mobileOfGroom = #{mobileOfGroom},</if> 
+			<if test = "mobileOfBride != null">						mobileOfBride = #{mobileOfBride},</if> 
+			<if test = "emailOfGroom != null">						emailOfGroom = #{emailOfGroom},</if> 			
+			<if test = "emailOfBride != null">						emailOfBride = #{emailOfBride},</if> 
+			<if test = "mealTicketCountOfGroom != null">			mealTicketCountOfGroom = #{mealTicketCountOfGroom},</if> 
+			<if test = "mealTicketCountOfBride != null">			mealTicketCountOfBride = #{mealTicketCountOfBride},</if> 			
+			<if test = "estimatedAttendanceNumbers != null">		estimatedAttendanceNumbers = #{estimatedAttendanceNumbers},</if> 
+			<if test = "eventName != null">							eventName = #{eventName},</if> 
+			<if test = "eventContractorName != null">				eventContractorName = #{eventContractorName},</if> 			
+			<if test = "contactNumber != null">						contactNumber = #{contactNumber},</if> 
+			<if test = "mobile != null">							mobile = #{mobile},</if> 
+			<if test = "email != null">								email = #{email},</if> 
+			<if test = "eventType != null">							eventType = #{eventType},</if> 			
+			<if test = "groomAdultMealCount != null">				groomAdultMealCount = #{groomAdultMealCount},</if> 
+			<if test = "groomChildMealCount != null">				groomChildMealCount = #{groomChildMealCount},</if> 
+			<if test = "groomFnBPayment != null">					groomFnBPayment = #{groomFnBPayment},</if> 			
+			<if test = "groomUnitProcurementItemPayment != null">	groomUnitProcurementItemPayment = #{groomUnitProcurementItemPayment},</if> 
+			<if test = "groomDeposit != null">						groomDeposit = #{groomDeposit},</if> 
+			<if test = "groomDiscount != null">						groomDiscount = #{groomDiscount},</if>			
+			<if test = "groomCashDeposit != null">					groomCashDeposit = #{groomCashDeposit},</if> 
+			<if test = "groomCardDeposit != null">					groomCardDeposit = #{groomCardDeposit},</if> 
+			<if test = "groomDealWithinTheDay != null">				groomDealWithinTheDay = #{groomDealWithinTheDay},</if> 			
+			<if test = "brideAdultMealCount != null">				brideAdultMealCount = #{brideAdultMealCount},</if> 
+			<if test = "brideChildMealCount != null">				brideChildMealCount = #{brideChildMealCount},</if> 
+			<if test = "brideFnBPayment != null">					brideFnBPayment = #{brideFnBPayment},</if> 			
+			<if test = "brideUnitProcurementItemPayment != null">	brideUnitProcurementItemPayment = #{brideUnitProcurementItemPayment},</if> 
+			<if test = "brideDeposit != null">						brideDeposit = #{brideDeposit},</if> 
+			<if test = "brideDiscount != null">						brideDiscount = #{brideDiscount},</if> 			
+			<if test = "brideCashDeposit != null">					brideCashDeposit = #{brideCashDeposit},</if> 
+			<if test = "brideCardDeposit != null">					brideCardDeposit = #{brideCardDeposit},</if> 
+			<if test = "brideDealWithinTheDay != null">				brideDealWithinTheDay = #{brideDealWithinTheDay},</if> 			
+			<if test = "eventAdultMealCount != null">				eventAdultMealCount = #{eventAdultMealCount},</if> 
+			<if test = "eventChildMealCount != null">				eventChildMealCount = #{eventChildMealCount},</if> 
+			<if test = "eventUnitProcurementItemPayment != null">	eventUnitProcurementItemPayment = #{eventUnitProcurementItemPayment},</if> 			
+			<if test = "eventDeposit != null">						eventDeposit = #{eventDeposit},</if> 
+			<if test = "eventDiscount != null">						eventDiscount = #{eventDiscount},</if> 
+			<if test = "eventCashDeposit != null">					eventCashDeposit = #{eventCashDeposit},</if> 
+			<if test = "eventCardDeposit != null">					eventCardDeposit = #{eventCardDeposit},</if> 
+			<if test = "eventDealWithinTheDay != null">				eventDealWithinTheDay = #{eventDealWithinTheDay}</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteContractCustomer" parameterType="contractCustomersVO">
+		<!-- DSU2019_Wedding_Backend 계약고객 단일 삭제 delte sql 작성 -->
+		delete from ContractCustomers 
+		where id = #{id}
+	</delete>
+</mapper>

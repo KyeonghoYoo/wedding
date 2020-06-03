@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.UsersMapper">
+<!-- DSU2019_Wedding_Backend 사용자 insert -->
+	<insert id="insertUser" parameterType="usersVO">
+		<!-- DSU2019_Wedding_Backend 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select IFNULL(concat("KRBS",(SELECT LPAD((select RIGHT ((SELECT max(id) FROM users t), 6))+ 1, 6, "0"))),"KRBS000001")
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend insert sql-->
+		insert INTO users (
+			ID, AccountID, Password, Grade, UserName, Mobile, ContactNumber, Email, Responsibility
+		)VALUES(
+			#{id}, #{accountID}, #{password}, #{grade}, #{userName}, #{mobile}, #{contactNumber}, #{email}, #{responsibility}
+		);
+	</insert>
+	
+	<!-- DSU2019_Wedding_Backend 사용자 리스트 조회-->
+	<select id = "selectUsers" parameterType="usersVO" resultType="usersVO">
+		<!-- DSU2019_Wedding_Backend 사용자 리스트 select sql -->
+		    select * from users
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test="id != null">				AND ID = 			 #{id} </if>
+				<if test="accountID != null">		AND AccountID = 	 #{accountID} </if>
+				<if test="password != null">		AND Password = 		 #{password} </if>
+				<if test="grade != null">			AND Grade = 		 #{grade} </if>
+				<if test="userName != null">		AND UserName = 		 LIKE CONCAT('%', #{userName}, '%') </if>
+				<if test="mobile != null">			AND Mobile = 		 LIKE CONCAT('%', #{mobile}, '%') </if>
+				<if test="contactNumber != null">	AND ContactNumber =  LIKE CONCAT('%', #{contactNumber}, '%') </if>
+				<if test="email != null">			AND Email = 		 #{email} </if>
+				<if test="responsibility != null">	AND Responsibility = #{responsibility} </if>
+			</trim>
+	</select>
+	
+		<!-- DSU2019_Wedding_Backend 사용자 단일 조회-->
+	<select id = "selectUser" parameterType="usersVO" resultType="usersVO">
+		<!-- DSU2019_Wedding_Backend 사용자 리스트 select sql -->
+		    select * from users where ID = #{id}
+	</select>
+
+	<update id="updateUsers" parameterType="usersVO">
+		<!-- DSU2019_Wedding_Backend 사용자 update sql 작성 -->
+	update users
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="password != null">		Password = 		 #{password}, </if>
+			<if test="grade != null">			Grade = 		 #{grade}, </if>
+			<if test="userName != null">		UserName = 		 #{userName}, </if>
+			<if test="mobile != null">			Mobile = 		 #{mobile}, </if>
+			<if test="contactNumber != null">	ContactNumber =  #{contactNumber}, </if>
+			<if test="email != null">			Email = 		 #{email}, </if>
+			<if test="responsibility != null">	Responsibility = #{responsibility}, </if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteUsers" parameterType="usersVO">
+		<!-- DSU2019_Wedding_Backend 사용자 단일 삭제 delte sql 작성 -->
+		delete from users 
+		where id = #{id}
+	</delete>
+
+</mapper>

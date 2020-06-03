@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.ClientsMapper">
+<!-- DSU2019_Wedding_Backend 거래처 insert -->
+	<insert id="insertClient" parameterType="clientsVO">
+		<!-- DSU2019_Wedding_Backend id 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select IFNULL(concat("KRBS",(SELECT LPAD((select RIGHT ((SELECT max(id) FROM clients t), 6))+ 1, 6, "0"))),"KRBS000001")
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend 거래처 insert sql-->
+		insert INTO clients (
+			ID, ClientClassification, Name, UserName, Mobile, ContactNumber, FaxNumber, Email, Memo
+		)VALUES(
+			#{id}, #{clientClassification}, #{name}, #{userName}, #{mobile}, #{contactNumber}, #{faxNumber}, #{email}, #{memo}
+		);
+	</insert>
+	
+	<!-- DSU2019_Wedding_Backend 거래처 리스트 조회-->
+	<select id = "selectClients" parameterType="clientsVO" resultType="clientsVO">
+		<!-- DSU2019_Wedding_Backend 거래처 리스트 select sql -->
+		    select * from clients
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test = "id != null">					AND ID = #{id}</if> 
+				<if test = "clientClassification != null">	AND ClientClassification = #{clientClassification}</if> 
+				<if test = "name != null">					AND Name = #{name}</if> 
+				<if test = "userName != null">				AND UserName = #{userName}</if> 
+				<if test = "mobile != null">				AND Mobile = #{mobile}</if> 
+				<if test = "contactNumber != null">			AND ContactNumber = #{contactNumber}</if> 
+				<if test = "faxNumber != null">				AND FaxNumber = #{faxNumber}</if> 
+				<if test = "email != null">					AND Email = #{email}</if> 
+				<if test = "memo != null">					AND Memo = #{memo}</if>
+			</trim>
+	</select>
+	
+		<!-- DSU2019_Wedding_Backend 거래처 단일 조회-->
+	<select id = "selectClient" parameterType="clientsVO" resultType="clientsVO">
+		<!-- DSU2019_Wedding_Backend 거래처 리스트 select sql -->
+		    select * from clients where ID = #{id}
+	</select>
+
+	<update id="updateClient" parameterType="clientsVO">
+		<!-- DSU2019_Wedding_Backend 거래처 update sql 작성 -->
+	update clients
+		<trim prefix="SET" suffixOverrides=",">
+			<if test = "id != null">					ID = #{id},</if> 
+			<if test = "clientClassification != null">	ClientClassification = #{clientClassification},</if> 
+			<if test = "name != null">					Name = #{name},</if> 
+			<if test = "userName != null">				UserName = #{userName},</if> 
+			<if test = "mobile != null">				Mobile = #{mobile},</if> 
+			<if test = "contactNumber != null">			ContactNumber = #{contactNumber},</if> 
+			<if test = "faxNumber != null">				FaxNumber = #{faxNumber},</if> 
+			<if test = "email != null">					Email = #{email},</if> 
+			<if test = "memo != null">					Memo = #{memo},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteClient" parameterType="clientsVO">
+		<!-- DSU2019_Wedding_Backend 거래처 단일 삭제 delte sql 작성 -->
+		delete from clients 
+		where id = #{id}
+	</delete>
+
+</mapper>

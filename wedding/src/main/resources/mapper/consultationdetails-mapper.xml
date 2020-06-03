@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.ConsultationDetailsMapper">
+	<!-- DSU2019_Wedding_Backend_1.1 상담내역 insert -->
+	<insert id="insertConsultationDetail" parameterType="consultationDetailsVO">
+		<!-- DSU2019_Wedding_Backend_1.1.1 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select IFNULL(concat("KRBS",(SELECT LPAD((select RIGHT ((SELECT max(id) FROM consultationdetails t), 6))+ 1, 6, "0"))),"KRBS000001")
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend_1.1.2 insert sql 작성 -->
+		insert INTO consultationdetails (
+			ID, ConsultationDate, ConsultationClassification, VisitClassification, VisitDate, Contents, UnregisteredCustomerName, ConsultationCustomers_ID, ContractCustomers_ID
+		)VALUES(
+			#{id}, #{consultationDate}, #{consultationClassification}, #{visitClassification}, #{visitDate}, #{contents}, #{unregisteredCustomerName}, #{consultationCustomers_ID}, #{contractCustomers_ID}
+		);
+	</insert>
+	<!-- DSU2019_Wedding_Backend 상담내역 리스트 조회-->
+	<select id = "selectConsultationDetails" parameterType="consultationDetailsVO" resultType="consultationDetailsVO">
+		<!-- DSU2019_Wedding_Backend 상담내역 리스트 select sql -->
+		    select * from consultationdetails
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test = "id != null">						AND id = #{id}</if> 
+				<if test = "consultationDate != null">			AND consultationDate = #{consultationDate}</if> 
+				<if test = "consultationClassification != null">AND consultationClassification = #{consultationClassification}</if> 
+				<if test = "visitClassification != null">		AND visitClassification = #{visitClassification}</if> 
+				<if test = "visitDate != null">					AND visitDate = #{visitDate}</if> 
+				<if test = "contents != null">					AND contents = #{contents}</if> 
+				<if test = "unregisteredCustomerName != null">	AND unregisteredCustomerName = #{unregisteredCustomerName}</if> 
+				<if test = "consultationCustomers_ID != null">	AND consultationCustomers_ID = #{consultationCustomers_ID}</if> 
+				<if test = "contractCustomers_ID != null">		AND contractCustomers_ID = #{contractCustomers_ID}</if>
+			</trim>
+	</select>
+	
+		<!-- DSU2019_Wedding_Backend 상담내역 단일 조회-->
+	<select id = "selectConsultationDetail" parameterType="consultationDetailsVO" resultType="consultationDetailsVO">
+		<!-- DSU2019_Wedding_Backend 상담내역 리스트 select sql -->
+		    select * from consultationdetails where ID = #{id}
+	</select>
+
+	<update id="updateConsultationDetail" parameterType="consultationDetailsVO">
+		<!-- DSU2019_Wedding_Backend 상담내역 update sql 작성 -->
+	update consultationdetails
+		<trim prefix="SET" suffixOverrides=",">
+			<if test = "id != null">						 id = #{id},</if> 
+			<if test = "consultationDate != null">			 consultationDate = #{consultationDate},</if> 
+			<if test = "consultationClassification != null"> consultationClassification = #{consultationClassification},</if> 
+			<if test = "visitClassification != null">		 visitClassification = #{visitClassification},</if> 
+			<if test = "visitDate != null">					 visitDate = #{visitDate},</if> 
+			<if test = "contents != null">					 contents = #{contents},</if> 
+			<if test = "unregisteredCustomerName != null">	 unregisteredCustomerName = #{unregisteredCustomerName},</if> 
+			<if test = "consultationCustomers_ID != null">	 consultationCustomers_ID = #{consultationCustomers_ID},</if> 
+			<if test = "contractCustomers_ID != null">		 contractCustomers_ID = #{contractCustomers_ID},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteConsultationDetail" parameterType="consultationDetailsVO">
+		<!-- DSU2019_Wedding_Backend 상담내역 단일 삭제 delte sql 작성 -->
+		delete from consultationdetails 
+		where id = #{id}
+	</delete>
+</mapper>

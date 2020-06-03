@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.HallsMapper">
+<!-- DSU2019_Wedding_Backend 홀 insert -->
+	<insert id="insertHalls" parameterType="hallsVO">
+		<!-- DSU2019_Wedding_Backend id 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select IFNULL(concat("KRBS",(SELECT LPAD((select RIGHT ((SELECT max(id) FROM halls t), 6))+ 1, 6, "0"))),"KRBS000001")
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend 홀 insert sql-->
+		insert INTO halls (
+			ID, Halls.Order, HallClassification, HallName
+		)VALUES(
+			#{id}, #{order}, #{hallClassification}, #{hallName}
+		);
+	</insert>
+	
+	<!-- DSU2019_Wedding_Backend 홀 리스트 조회-->
+	<select id = "selectHalls" parameterType="hallsVO" resultType="hallsVO">
+		<!-- DSU2019_Wedding_Backend 홀 리스트 select sql -->
+		    select * from halls
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test = "id != null">				 AND ID					= #{id}</if>
+				<if test = "hallClassification != null"> AND HallClassification = #{hallClassification}</if>
+				<if test = "hallName != null">			 AND HallName 			= #{hallName}</if>
+			</trim>
+	</select>
+	
+		<!-- DSU2019_Wedding_Backend 홀 단일 조회-->
+	<select id = "selectHall" parameterType="hallsVO" resultType="hallsVO">
+		<!-- DSU2019_Wedding_Backend 홀 리스트 select sql -->
+		    select * from halls where ID = #{id}
+	</select>
+
+	<update id="updateHalls" parameterType="hallsVO">
+		<!-- DSU2019_Wedding_Backend 홀 update sql 작성 -->
+	update halls
+		<trim prefix="SET" suffixOverrides=",">
+				<if test = "order != null">				 halls.Order 		= #{order},</if>
+				<if test = "hallClassification != null"> HallClassification = #{hallClassification},</if>
+				<if test = "hallName != null">			 HallName 			= #{hallName},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteHalls" parameterType="hallsVO">
+		<!-- DSU2019_Wedding_Backend 홀 단일 삭제 delte sql 작성 -->
+		delete from halls 
+		where id = #{id}
+	</delete>
+
+</mapper>

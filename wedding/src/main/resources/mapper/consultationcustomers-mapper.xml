@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.ConsultationCustomersMapper">
+
+	<!-- DSU2019_Wedding_Backend 상담고객 insert -->
+	<insert id="insertConsultationCustomer" parameterType="consultationCustomersVO">
+		<!-- DSU2019_Wedding_Backend 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select IFNULL(concat("KRBS",(SELECT LPAD((select RIGHT ((SELECT max(id) FROM consultationcustomers t), 6))+ 1, 6, "0"))),"KRBS000001")
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend insert sql-->
+		insert INTO consultationcustomers (
+			ID, RegistrationDate, ContactPath, EventClassification, State, Halls_ID, HallName,
+			Users_ID, UserName, StartedDate, EndDate, GroomName, BrideName, MobileOfGroom, MobileOfBride,
+			EventName, EventContractorName, ContactNumber, Mobile, EventType, Memo
+		)VALUES(
+ 			#{id}, #{registrationDate}, #{contactPath}, #{eventClassification}, #{state}, #{halls_ID}, #{hallName},
+			#{users_ID}, #{userName}, #{startedDate}, #{endDate}, #{groomName}, #{brideName}, #{mobileOfGroom}, #{mobileOfBride},
+			#{eventName}, #{eventContractorName}, #{contactNumber}, #{mobile}, #{eventType}, #{memo}
+		);
+	</insert>
+	
+	<!-- DSU2019_Wedding_Backend 상담고객 리스트 조회-->
+	<select id = "selectConsultationCustomers" parameterType="com.wedding.dsu.model.consultationcustomers.ConsultationCustomersSearchVO" resultType="consultationCustomersVO">
+		<!-- DSU2019_Wedding_Backend 상담고객 리스트 select sql -->
+		    select * from consultationcustomers
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test="eventClassification != null">		AND eventClassification		= #{eventClassification}</if>
+				<if test="contactPath != null">				AND ContactPath				= #{contactPath}</if>
+				<if test="eventType != null">				AND eventType				= #{eventType}</if>	
+				<if test="eventName != null">				AND eventName			LIKE CONCAT('%', #{eventName}, '%')</if>
+				<if test="totalNameSearch != null">			AND eventName			LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR  groomName			LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR  brideName			LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR  eventContractorName	LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR	mobileOfBride		LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR  mobileOfGroom		LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR  contactNumber		LIKE CONCAT('%', #{totalNameSearch}, '%')
+															OR  mobile				LIKE CONCAT('%', #{totalNameSearch}, '%')
+															</if>
+				<if test="customerName != null">			AND eventName			LIKE CONCAT('%', #{customerName}, '%')
+															OR  groomName			LIKE CONCAT('%', #{customerName}, '%')
+															OR  brideName			LIKE CONCAT('%', #{customerName}, '%')
+															OR  eventContractorName	LIKE CONCAT('%', #{customerName}, '%')
+															</if>
+				<if test="contactNumber != null">			AND mobileOfBride		LIKE CONCAT('%', #{contactNumber}, '%')
+															OR  mobileOfGroom		LIKE CONCAT('%', #{contactNumber}, '%')
+															OR  contactNumber		LIKE CONCAT('%', #{contactNumber}, '%')
+															OR  mobile				LIKE CONCAT('%', #{contactNumber}, '%')
+															</if>
+				<if test="dateSeachClassification != null">
+					<if test='dateSeachClassification == "등록일"'><include refid="dateSearchSql"><property name="alias" value="RegistrationDate"/></include></if>
+					<if test='dateSeachClassification == "행사일"'><if test="startDate != null">      and StartedDate &gt;= #{startDate}</if>
+	        														<if test="endDate != null">       and EndDate &lt;= #{endDate}</if></if>
+				</if>
+			</trim>
+	</select>
+	<sql id="dateSearchSql"><if test="startDate != null">      and ${alias} &gt;= #{startDate}</if>
+	        				<if test="endDate != null">        and ${alias} &lt;= #{endDate}</if> </sql>
+
+		<!-- DSU2019_Wedding_Backend 상담고객 단일 조회-->
+	<select id = "selectConsultationCustomer" parameterType="consultationCustomersVO" resultType="consultationCustomersVO">
+		<!-- DSU2019_Wedding_Backend 상담고객 리스트 select sql -->
+		    select * from consultationcustomers where ID = #{id};
+	</select>
+
+	<update id="updateConsultationCustomer" parameterType="consultationCustomersVO">
+		<!-- DSU2019_Wedding_Backend 상담고객 update sql 작성 -->
+	update consultationcustomers
+		<trim prefix="SET" suffixOverrides=","> 			
+			<if test = "registrationDate != null">		registrationDate = #{registrationDate},</if> 
+			<if test = "contactPath != null">			contactPath = #{contactPath},</if> 
+			<if test = "eventClassification != null">	eventClassification = #{eventClassification},</if> 
+			<if test = "state != null">					state = #{state},</if> 
+			<if test = "halls_ID != null">				halls_ID = #{halls_ID},</if> 
+			<if test = "hallName != null">				hallName = #{hallName},</if>		
+			<if test = "users_ID != null">				users_ID = #{users_ID},</if> 
+			<if test = "userName != null">				userName = #{userName},</if> 
+			<if test = "startedDate != null">			startedDate = #{startedDate},</if> 
+			<if test = "endDate != null">				endDate = #{endDate},</if> 
+			<if test = "groomName != null">				groomName = #{groomName},</if> 
+			<if test = "brideName != null">				brideName = #{brideName},</if> 
+			<if test = "mobileOfGroom != null">			mobileOfGroom = #{mobileOfGroom},</if> 
+			<if test = "mobileOfBride != null">			mobileOfBride = #{mobileOfBride},</if>			
+			<if test = "eventName != null">				eventName = #{eventName},</if> 
+			<if test = "eventContractorName != null">	eventContractorName = #{eventContractorName},</if> 
+			<if test = "contactNumber != null">			contactNumber = #{contactNumber},</if> 
+			<if test = "mobile != null">				mobile = #{mobile},</if> 
+			<if test = "eventType != null">				eventType = #{eventType},</if> 
+			<if test = "memo != null">					memo = #{memo},</if>
+		</trim>
+		where id = #{id};
+	</update>
+
+	<delete id="deleteConsultationCustomer" parameterType="consultationCustomersVO">
+		<!-- DSU2019_Wedding_Backend 상담고객 단일 삭제 delte sql 작성 -->
+		delete from consultationcustomers 
+		where id = #{id};
+	</delete>
+</mapper>

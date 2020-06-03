@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.rog/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wedding.dsu.mapper.PaymentDetailsMapper">
+	<!-- DSU2019_Wedding_Backend_1.1 결제내역 insert -->
+	<insert id="insertPaymentDetail" parameterType="paymentDetailsVO">
+		<!-- DSU2019_Wedding_Backend_1.1.1 코드값 생성 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT CONCAT(#{contractCustomers_ID},(SELECT LPAD(SUBSTRING((SELECT IFNULL((SELECT MAX(id) FROM paymentdetails a WHERE id LIKE (SELECT CONCAT(#{contractCustomers_ID}, '%'))), #{contractCustomers_ID})), 11, 13) + (1), 2, '0'))) AS id
+		</selectKey>
+		<!-- DSU2019_Wedding_Backend_1.1.2 insert sql 작성 -->
+		insert INTO paymentdetails (
+			ID, PaymentDate, PaymentClassification, AccountClassification, Amount, PaymentMemo, ContractCustomers_ID
+		)VALUES(
+			#{id}, #{paymentDate}, #{paymentClassification}, #{accountClassification}, #{amount}, #{paymentMemo}, #{contractCustomers_ID}
+		);
+	</insert>
+	<!-- DSU2019_Wedding_Backend 결제내역 리스트 조회-->
+	<select id = "selectPaymentDetails" parameterType="paymentDetailsVO" resultType="paymentDetailsVO">
+		<!-- DSU2019_Wedding_Backend 결제내역 리스트 select sql -->
+		    select * from paymentdetails
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test = "id != null">					AND id = #{id}</if> 
+				<if test = "paymentDate != null">			AND paymentDate = #{paymentDate}</if> 
+				<if test = "paymentClassification != null">	AND paymentClassification = #{paymentClassification}</if> 
+				<if test = "accountClassification != null">	AND accountClassification = #{accountClassification}</if> 
+				<if test = "paymentMemo != null">			AND paymentMemo = #{paymentMemo}</if> 
+				<if test = "contractCustomers_ID != null">	AND contractCustomers_ID = #{contractCustomers_ID}</if>
+			</trim>
+	</select>
+	
+		<!-- DSU2019_Wedding_Backend 결제내역 단일 조회-->
+	<select id = "selectPaymentDetail" parameterType="paymentDetailsVO" resultType="paymentDetailsVO">
+		<!-- DSU2019_Wedding_Backend 결제내역 리스트 select sql -->
+		    select * from paymentdetails where ID = #{id}
+	</select>
+
+	<update id="updatePaymentDetail" parameterType="paymentDetailsVO">
+		<!-- DSU2019_Wedding_Backend 결제내역 update sql 작성 -->
+	update paymentdetails
+		<trim prefix="SET" suffixOverrides=",">
+			<if test = "paymentDate != null">			 paymentDate = #{paymentDate},</if> 
+			<if test = "paymentClassification != null">	 paymentClassification = #{paymentClassification},</if> 
+			<if test = "accountClassification != null">	 accountClassification = #{accountClassification},</if> 
+			<if test = "amount != 0">					 amount = #{amount},</if> 
+			<if test = "paymentMemo != null">			 paymentMemo = #{paymentMemo},</if> 
+			<if test = "contractCustomers_ID != null">	 contractCustomers_ID = #{contractCustomers_ID},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deletePaymentDetail" parameterType="paymentDetailsVO">
+		<!-- DSU2019_Wedding_Backend 결제내역 단일 삭제 delte sql 작성 -->
+		delete from paymentdetails 
+		where id = #{id}
+	</delete>
+</mapper>
